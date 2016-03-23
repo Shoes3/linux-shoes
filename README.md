@@ -20,11 +20,12 @@ probably doesn't do what you want.
   A downloaded Shoes which your are running. 
   If you happen to have Loose Shoes and Tight Shoes on the same system, now would
   be a good time create an alias 
-  ```
+  
+```
   alias tshoes=~/.shoes/walkabout/shoes and use that.
-  ```
-
+ZZ```
 * fpm gem is installed in that Ruby (use cobbler) or 
+
 ``` 
 $  tshoes -g install fpm
 Fetching: ffi-1.9.10.gem (100%)
