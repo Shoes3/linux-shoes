@@ -26,14 +26,31 @@ probably doesn't do what you want.
 
 * fpm gem is installed in that Ruby (use cobbler) or 
 ``` 
-$ tshoes -g install fpm
+$  tshoes -g install fpm
+Fetching: ffi-1.9.10.gem (100%)
+Building native extensions.  This could take a while...
+Successfully installed ffi-1.9.10
+Fetching: clamp-0.6.5.gem (100%)
+Successfully installed clamp-0.6.5
+Fetching: childprocess-0.5.9.gem (100%)
+Successfully installed childprocess-0.5.9
+Fetching: cabin-0.8.1.gem (100%)
+Successfully installed cabin-0.8.1
+Fetching: backports-3.6.8.gem (100%)
+Successfully installed backports-3.6.8
+Fetching: arr-pm-0.0.10.gem (100%)
+Successfully installed arr-pm-0.0.10
+Fetching: fpm-1.4.0.gem (100%)
+Successfully installed fpm-1.4.0
+7 gems installed
+Exiting RubyGems with exit_code 0
 ```
 
 ## Contents 
 
 Git clone the github repo.
-Inside is ytm\ directory which is a sample application
-ytm/  and there is ytm-merge  ytm.yaml. There is a pack.rb which does all the work. You'll probably
+Inside is ytm/ directory which is a sample application and there is ytm-merge
+and  ytm.yaml. There is a pack.rb which does all the work. You'll probably
 want to modify it to load the yaml file for your app. The nsis dir contains
 the NSIS script and macros, icons, installer images (in .bmp format - not my problem to
 fix). There is a min-shoes.rb which will be copied and modified to call your starting script
