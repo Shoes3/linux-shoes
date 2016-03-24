@@ -16,17 +16,17 @@ probably doesn't do what you want.
 
 ## Requirements 
 
-* Tight Shoes linux installed - we can't depend on rvm to build what we want. 
-  A downloaded Shoes which your are running. 
+* Tight Shoes linux installed - we can't depend Loose Shoes. 
   If you happen to have Loose Shoes and Tight Shoes on the same system, now would
-  be a good time create an alias 
+  be a good time create an alias   
   
 ```
-  alias tshoes=~/.shoes/walkabout/shoes and use that.
-ZZ```
+  alias tshoes=~/.shoes/walkabout/shoes
+```
+
 * fpm gem is installed in that Ruby (use cobbler) or 
 
-``` 
+```
 $  tshoes -g install fpm
 Fetching: ffi-1.9.10.gem (100%)
 Building native extensions.  This could take a while...
@@ -50,19 +50,19 @@ Exiting RubyGems with exit_code 0
 ## Contents 
 
 Git clone the github repo.
-Inside is ytm/ directory which is a sample application and there is ytm-merge
-and  ytm.yaml. There is a pack.rb which does all the work. You'll probably
-want to modify it to load the yaml file for your app. The nsis dir contains
-the NSIS script and macros, icons, installer images (in .bmp format - not my problem to
+Inside is the ytm/ directory which is a sample application and there is ytm-merge.rb 
+and ytm.yaml. There is a merge-lin.rb which does all the work. You'll probably
+want to modify it to load the yaml file for your app. 
 fix). There is a min-shoes.rb which will be copied and modified to call your starting script
 instead of shoes.rb
 
-Perhaps you're thinking "I need to know a lot". Perhaps, but it's just scripts.
-Nothing to be afraid of.
+Perhaps you're thinking "I need to know a lot". It's just scripts but you do
+need to know what's in a deb or rpm or ... So know their rules.
+
 
 ## Usage 
 
-`$ cshoes.exe --ruby ytm-merge.rb`
+`$ tshoes.exe --ruby ytm-merge.rb`
 
 As you know --ruby means to run Shoes as a mostly standard Ruby with some
 ENV['vars'] and Constants you'll find in Shoes. Like DIR and without showing the GUI.
@@ -72,6 +72,7 @@ PackShoes::merge_exe in merge-exe.rb which reads the ytm.yaml settings and goes
 to work building an exe. 
 
 The .yaml for the example is 
+
 ```
 app_name: Ytm
 app_version: 'Demo'
@@ -95,11 +96,11 @@ include_gems:
  - ffi-1.9.10-x86-mingw32
  - rubyserial-0.2.4
 ```
- Remember - That is just a demo!  Give it a try to see how it works. 
+Remember - That is just a demo!  Give it a try to see how it works. 
  
- WARNING: because it's yaml and read by Ruby you must use Ruby Windows file path
- syntax. There is a special place in hell if you use Windows `\`. To be safe
- do not have any spaces in any of the path or file names. 
+WARNING: because it's yaml and read by Ruby you must use Ruby Windows file path
+syntax. There is a special place in hell if you use Windows `\`. To be safe
+do not have any spaces in any of the path or file names. 
  
  app_loc: is where your app to package is and app_start: is the starting script
  in app_loc. app_png is your app icon in png format. (if you need it - it's good idea). 
