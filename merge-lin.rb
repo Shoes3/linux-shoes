@@ -1,6 +1,7 @@
 
 module PackShoes
  require 'fileutils'
+ require 'fpm'
  def PackShoes.rewrite a, before, hsh
     File.open(before) do |b|
       b.each do |line|
@@ -15,7 +16,7 @@ module PackShoes
     end
   end
   
-  def PackShoes.merge_exe opts
+  def PackShoes.merge_linux opts
     # setup defaults if not in the opts
     opts['publisher'] = 'shoerb' unless opts['publisher']
     opts['website'] = 'http://shoesrb.com/' unless opts['website']

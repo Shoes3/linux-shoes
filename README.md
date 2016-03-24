@@ -1,4 +1,4 @@
-# Exe-Shoes 
+# Linux-Shoes 
 
 This is a Linux only project that packages a **Tight** Shoes project into a more 
 user friendly deb or rpm or ... It attempts to hide the use of Shoes as
