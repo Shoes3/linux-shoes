@@ -16,18 +16,25 @@ probably doesn't do what you want.
 
 ## Requirements 
 
-* Tight Shoes linux installed - we can't depend Loose Shoes. 
-  If you happen to have Loose Shoes and Tight Shoes on the same system, now would
-  be a good time create an alias   
+* Tight Shoes linux installed - we can't on depend Loose Shoes being built for distribution
+  because it isn't/  If you happen to have Loose Shoes and Tight Shoes on the same system, now would
+  be a good time create an alias and put it in your ~/.bashrc or ~/bash_profile or..
   
 ```
-  alias tshoes=~/.shoes/walkabout/shoes
+  alias cshoes=~/.shoes/walkabout/shoes
 ```
+### fpm gem is installed
 
-* fpm gem is installed in that Ruby (use cobbler) or 
+BEWARE: fpm is a shell command which is how we use it. 
+It's also a ruby gem with a bin/ which means in should be installed
+by the ruby at your shell prompt and accessible to that ruby. *Nothing* 
+to do with the Shoes ruby version. 
 
 ```
-$  tshoes -g install fpm
+$ which gem
+/home/ccoupe/.rvm/rubies/ruby-2.1.6/bin/gem
+
+$ gem install fpm
 Fetching: ffi-1.9.10.gem (100%)
 Building native extensions.  This could take a while...
 Successfully installed ffi-1.9.10
@@ -46,6 +53,11 @@ Successfully installed fpm-1.4.0
 7 gems installed
 Exiting RubyGems with exit_code 0
 ```
+Make sure it works:
+```
+$ fpm -h
+```
+That should produce a mind numbing list of options. 
 
 ## Contents 
 

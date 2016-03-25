@@ -1,7 +1,6 @@
 
 module PackShoes
  require 'fileutils'
- require 'fpm'
  def PackShoes.rewrite a, before, hsh
     File.open(before) do |b|
       b.each do |line|
@@ -26,15 +25,17 @@ module PackShoes
       Dir.glob('*') {|f| toplevel << f}
     end
     exclude = %w(static CHANGELOG.txt cshoes.exe gmon.out README.txt
-      samples)
+      samples package VERSION.txt)
     #exclude = []
-    packdir = 'packdir'
+    #packdir = 'packdir'
+    packdir = "#{opts['app_name']}-app"
     rm_rf packdir
-    mkdir_p(packdir) # where makensis will find it.
+    mkdir_p(packdir) # where fpm will find it.
+    # copy shoes
     (toplevel-exclude).each do |p|
       cp_r File.join(DIR, p), packdir
     end
-    # do the license struff
+    # do the license stuff
     licf = File.open("#{packdir}/COPYING.txt", 'w')
     if opts['license'] && File.exist?(opts['license'])
       IO.foreach(opts['license']) {|ln| licf.puts ln}
@@ -106,58 +107,46 @@ module PackShoes
     rm_gems.each do |g|
       puts "Deleting #{g}"
       rm_rf "#{sgpath}/specifications/#{g}.gemspec"
-      rm_rf "#{sgpath}/extensions/x86-mingw32/#{rbmm}.0/#{g}"
-     rm_rf "#{sgpath}/gems/#{g}"
+      rm_rf "#{sgpath}/extensions/#{RUBY_PLATFORM}/#{rbmm}.0/#{g}"
+      rm_rf "#{sgpath}/gems/#{g}"
     end
 
-    # copy requested gems from AppData\Local\shoes\+gems aka GEMS_DIR
+    # copy requested gems from user's Shoes GEMS_DIR
     incl_gems.delete('sqlite3') if incl_gems.include?('sqlite3')
     incl_gems.each do |name| 
       puts "Copy #{name}"
       cp "#{GEMS_DIR}/specifications/#{name}.gemspec", "#{sgpath}/specifications"
+      # does the gem have binary?
+      built = "#{GEMS_DIR}/extensions/#{RUBY_PLATFORM}/#{rbmm}.0/#{name}/gem.build_complete"
+      if File.exist? built
+        mkdir_p "#{sgpath}/extensions/#{RUBY_PLATFORM}/#{rbmm}.0/#{name}"
+        cp "#{GEMS_DIR}/extensions/#{RUBY_PLATFORM}/#{rbmm}.0/#{name}/gem.build_complete",
+          "#{sgpath}/extensions/#{RUBY_PLATFORM}/#{rbmm}.0/#{name}"
+      end
       cp_r "#{GEMS_DIR}/gems/#{name}", "#{sgpath}/gems"
     end
-
-    puts "make_installer"
-
-    mkdir_p "pkg"
-    #cp_r "VERSION.txt", "#{packdir}/VERSION.txt"
-    rm_rf "#{packdir}/nsis"
-    cp_r  "nsis", "#{packdir}/nsis"
-    # Icon for installer
-    cp opts['app_installer_ico'], "#{packdir}/nsis/setup.ico"
-    # change nsis side bar and top images (bmp only)
-    sb_img = opts['installer_sidebar_bmp'] 
-    if sb_img
-     cp sb_img, "#{packdir}/nsis/installer-1.bmp"
-    end
-    tp_img = opts['installer_header_bmp']
-    if tp_img 
-     cp tp_img, "#{packdir}/nsis/installer-2.bmp"
-    end
-    # stuff icon into a new app_name.exe using shoes.exe 
-    Dir.chdir(packdir) do |p|
-      winico_path = "#{opts['app_ico'].tr('/','\\')}"
-      cmdl = "\"C:\\Program Files (x86)\\Resource Hacker\\ResourceHacker.exe\" -modify  shoes.exe, #{opts['app_name']}.exe, #{winico_path}, icongroup,32512,1033"
-      #puts cmdl
-      if system(cmdl)
-        rm 'shoes.exe' if File.exist?("#{opts['app_name']}.exe")
-      else 
-        puts "FAIL: #{$?} #{cmdl}"
+    
+    # hide shoes-bin and shoes launch script names
+    Dir.chdir(packdir) do
+      mv 'shoes-bin', "#{opts['app_name']}-bin"
+      File.open("#{opts['app_name']}", 'w') do |f|
+        f << <<SCR
+#!/bin/bash
+REALPATH=`readlink -f $0`
+APPPATH="${REALPATH%/*}"
+if [ "$APPPATH" = "." ]; then
+  APPPATH=`pwd`
+fi
+LD_LIBRARY_PATH=$APPPATH $APPPATH/#{opts['app_name']}-bin
+SCR
       end
+      chmod 0755, "#{opts['app_name']}"
+      rm_rf 'shoes'
+      rm_rf 'debug'
     end
-    newn = File.open("#{packdir}/nsis/#{opts['app_name']}.nsi", 'w')
-    rewrite newn, "#{packdir}/nsis/base.nsi", {
-      'APPNAME' => opts['app_name'],
-      'WINVERSION' => opts['app_version'],
-      "PUBLISHER" => opts['publisher'],
-      "WEBSITE" => opts['website'],
-      "HKEY_ORG" => opts['hkey_org']
-      }
-    newn.close
-    Dir.chdir("#{packdir}/nsis") do |p|
-      system "\"C:\\Program Files (x86)\\NSIS\\Unicode\\makensis.exe\" #{opts['app_name']}.nsi\""
-      Dir.glob('*.exe') { |p| mv p, '../../pkg' }
-    end
+    puts "make_installer"
+    # now we do fpm things 
+    arch = `uname -m`
+    `fpm --verbose -t deb -s dir -p #{packdir}.deb -f -n #{packdir} -a #{arch} `
   end
 end

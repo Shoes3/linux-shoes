@@ -16,6 +16,6 @@ include_exts:
  - chipmunk
 include_gems:
  - sqlite3
- - nokogiri-1.6.7.1-x86-mingw32
- - ffi-1.9.10-x86-mingw32
+ - nokogiri-1.6.7.1
+ - ffi-1.9.10
  - rubyserial-0.2.4
