@@ -7,10 +7,14 @@ app_ico: /home/ccoupe/Projects/exe-shoes/ytm/ytm.ico
 app_installer_ico: /home/ccoupe/Projects/exe-shoes/ytm/ytm.ico
 installer_sidebar_bmp: /home/ccoupe/Projects/icons/ytm/installer-1.bmp
 installer_header_bmp: /home/ccoupe/Projects/icons/ytm/installer-2.bmp
-publisher: 'YTM Corp Inc'
+purpose: 'Compute Yield to Maturity'
+publisher: 'Right Wing Conspiracy'
 website: 'https://github.com/Shoes3/shoes3'
+maintainer: 'ccoupe@cableone.net'
 hkey_org: 'mvmanila.com'
 license: /home/ccoupe/Projects/exe-shoes/ytm/Ytm.license
+category: Investing
+linux_where: /usr/local  # this less likely to cause problems
 include_exts:
  - ftsearch
  - chipmunk

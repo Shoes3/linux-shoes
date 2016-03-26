@@ -20,6 +20,7 @@ module PackShoes
     opts['publisher'] = 'shoerb' unless opts['publisher']
     opts['website'] = 'http://shoesrb.com/' unless opts['website']
     opts['hkey_org'] = 'Hackety.org' unless opts['hkey_org']
+    opts['linux_where'] = '/usr/local' unless opts['linux_where']
     toplevel = []
     Dir.chdir(DIR) do
       Dir.glob('*') {|f| toplevel << f}
@@ -127,6 +128,9 @@ module PackShoes
     end
     
     # hide shoes-bin and shoes launch script names
+    puts "make_installer"
+    after_install = "#{opts['app_name']}_install.sh"
+    where = opts['linux_where']
     Dir.chdir(packdir) do
       mv 'shoes-bin', "#{opts['app_name']}-bin"
       File.open("#{opts['app_name']}", 'w') do |f|
@@ -143,10 +147,28 @@ SCR
       chmod 0755, "#{opts['app_name']}"
       rm_rf 'shoes'
       rm_rf 'debug'
+      # still inside packdir. Make an fpm after-install script
+      File.open(after_install, 'w') do |f|
+       f << <<SCR
+#!/bin/bash
+cd #{where}/bin
+ln -s #{where}/lib/#{packdir}/#{opts['app_name']} .
+SCR
+       chmod 0755, f
+      end
     end
-    puts "make_installer"
-    # now we do fpm things 
-    arch = `uname -m`
-    `fpm --verbose -t deb -s dir -p #{packdir}.deb -f -n #{packdir} -a #{arch} `
+    # now we do fpm things - lets build a bash script for debugging
+    arch = `uname -m`.strip
+    File.open('fpm.sh','w') do |f|
+      f << <<SCR
+#!/bin/bash
+fpm --verbose -t deb -s dir -p #{packdir}.deb -f -n #{opts['app_name']} \\
+--prefix '#{opts['linux_where']}/lib' --after-install #{packdir}/#{after_install} \\
+-a #{arch} --url "#{opts['website']}" --license 'None' \\
+--vendor '#{opts['publisher']}' --category #{opts['category']} \\
+--description "#{opts['purpose']}" -m '#{opts['maintainer']}' #{packdir}
+SCR
+    end
+    chmod 0755, 'fpm.sh'
   end
 end
