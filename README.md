@@ -116,81 +116,49 @@ include_gems:
 
 Remember - That is just a demo!  Give it a try to see how it works. 
  
-WARNING: because it's yaml and read by Ruby you must use Ruby Windows file path
-syntax. There is a special place in hell if you use Windows `\`. To be safe
-do not have any spaces in any of the path or file names. 
- 
  app_loc: is where your app to package is and app_start: is the starting script
- in app_loc. app_png is your app icon in png format. (if you need it - it's good idea). 
- You certainly want your own Windows icon (.ico) for the your app app_ico: is
- where point to it. If you want a different icon for the installer - app_installer_ico:
- 
+ in app_loc. app_png is your app icon in png format in app_loc. Yes, you need an icon,
+ after all your trying to hide Shoes.
+
  If you want to include Shoes exts, ftsearch and chipmunk you would list them here.
+ or delete those two lines (keep the include_exts: line)
  Unless you really do need chipmunk you shouldn't add it like I show above. Since you're not
  going to get a manual, you don't need ftsearch so delete those two lines.
  
  Gem are fun. You can include Shoes built in gems like sqlite and nokogiri as shown above
- and you can include gems you have installed in the Shoes that is running the script
+ and you can include gems you have installed in the Shoes (tshoes) that is running the script
  like ffi and rubyserial in the example. If you can't install the Gems in Shoes, then you can't include them.
  We don't automatically include dependent gems. You'll have to do that yourself with
- proper entries in your yaml file as I've shown above, 'rubyserial' requires 'ffi'
+ proper entries in your yaml file as I've shown above, 'rubyserial' requires 'ffi' for example
  
 ### app_name, app_version:
 
-Beware! these are sent to the nsis script and it's very particular. Even worse
-pack.rb uses app_name: to do multiple duty. Some confusion is possible. 
-
-NSIS expects app_version to be a string and all it really does is name the exe
-`#{app_name}-#{app_version}`. Expect annoyance. 
-
-Read the merge-exe.rb script. It's not that big and it's yours to do what
+Read the merge-lin.rb script. It's not that big and it's yours to do what
 you want.
 
-## NSIS
+Don't put any spaces in app_name unless your willing to fix things.
+app_version isn't used in the Linux variation currently.
 
-NSIS has it's own scripting language and the scripts included in this project
-are just slightly modified from what Shoes uses for building Shoes exe's.  
-You can and probably should modify things for what you want the installer 
-to do and look like.
+### fpm
 
-It you're going to use the included default script you'll certainly want to 
-replace the installer-1.bmp and install-2.bmp with your own images. You'll want
-width and height to be very close to what is used. These have to be ancient format bmps
-24 bit, no color space.  Not my rules. Accept what NSIS wants. 
+I'm using fpm and since you've scanned the merge-lin.rb script you noticed
+a lot of yaml entries exist just to fill in the fpm command line. fpm can do deb and
+serveral other formats. Note that fpm.sh script is create before call it. You'll have 
+something to look at, if things go wrong. Modify the script for rpm instead of deb is simple if 
+that's what you want. 
 
-### base.nsis
+Less obvious is that where lin-merge.rb creates fpm.sh and calls it, every thing is in Ytm-App/
+(this example) so if you want more control or the fpm formats and options don't work for you, then you
+can call the distribution packaging tools yourself with whatever generated config files you
+like. 
 
-If you peek at base.nsis you'll see some Shoes entries that you probably 
-don't want people to see if you're trying to hide Shoes or behavior you 
-don't want. I don't want to sound too cavalier, but it's your base.nsi and merge-exe.rb
-to modify as you need. You can do some customization of the installer with as shown in
-the ytm.yaml above. The defaults are Shoes based. 
-
-You'll have to consider the Liscensing terms. You should acknowledge the copyrights and terms 
-of some of the code. As written, if you have a license: entry in your .yaml 
-that text file it will be merged with normal Shoes T&C's - yours will be at the
-top of what the user will see.
-
-### Where is my app.exe?
-
-If successful it's in pkg\. Move it from there to your website or test machine
-or double click it to launch the installer just like a user would. Test out how your installer
-looks. Install it. Run it on the same machine if you like -- it's independent
-of any existing Shoes you or your users might have.  Uninstall it - Shoes won't change.
-Poke around in `C:\"Program Files (86)"\myapp` - notice the differences between between
-the insides of `C:\"Program Files (86)"\Shoes`
+#{packdir} is a complete application. Cd into it and ./the app_name:  As written, it's easier
+to install #{packdir} in /usr/[local]/lib/Ytm-app. - The script appends -app because there is a ytm/
+in the directory. *Because it's example.* You would be better off having  app_loc: point to a directory
+that isn't next to the lin-merge.rb script.  You might have to fix a few lines of code incase the -app
+is appended when it shouldn't be. I'm at the mercy of how github stores things for download and I wanted
+to include an example you can run.  It's only a script and now it's your script.
 
 
-### Troubleshooting
-nsis is a little weird - the messages for packaging may display 
-before the starting messages from Ruby.  You'll have no trouble telling whether
-the error is from Ruby or NSIS. 
-
-If you encounter errors, remember that a full copy is made into packdir\
-and a copy/modified nsis script is in packdir\nsis so you can see what was
-done at the point of failure.
-
-
- 
 
 
