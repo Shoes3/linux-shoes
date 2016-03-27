@@ -17,18 +17,19 @@ probably doesn't do what you want.
 ## Requirements 
 
 * Tight Shoes linux installed - we can't on depend Loose Shoes being built for distribution
-  because it isn't/  If you happen to have Loose Shoes and Tight Shoes on the same system, now would
-  be a good time create an alias and put it in your ~/.bashrc or ~/bash_profile or..
+  because it isn't.  If you happen to have Loose Shoes and Tight Shoes on the same system, now would
+  be a good time create an alias for Tight Shoes and put it in your ~/.bashrc or ~/bash_profile or..
   
 ```
-  alias cshoes=~/.shoes/walkabout/shoes
+  alias tshoes=~/.shoes/walkabout/shoes
 ```
+
 ### fpm gem is installed
 
 BEWARE: fpm is a shell command which is how we use it. 
 It's also a ruby gem with a bin/ which means in should be installed
 by the ruby at your shell prompt and accessible to that ruby. *Nothing* 
-to do with the Shoes ruby version. 
+to do with the Shoes ruby version or tshoes
 
 ```
 $ which gem
@@ -53,10 +54,12 @@ Successfully installed fpm-1.4.0
 7 gems installed
 Exiting RubyGems with exit_code 0
 ```
+
 Make sure it works:
 ```
 $ fpm -h
 ```
+
 That should produce a mind numbing list of options. 
 
 ## Contents 
@@ -88,26 +91,29 @@ The .yaml for the example is
 ```
 app_name: Ytm
 app_version: 'Demo'
-app_loc: C:/Projects/exe-shoes/ytm/
+app_loc: /home/ccoupe/Projects/linux-shoes/ytm/
 app_start: ytm.rb
 app_png: ytm.png
-app_ico: C:/Projects/exe-shoes/ytm/ytm.ico
-app_installer_ico: C:/Projects/exe-shoes/ytm/ytm.ico
-installer_sidebar_bmp: E:/icons/ytm/installer-1.bmp
-installer_header_bmp: E:/icons/ytm/installer-2.bmp
-publisher: 'YTM Corp Inc'
+purpose: 'Compute Yield to Maturity'
+publisher: 'Right Wing Conspiracy'
 website: 'https://github.com/Shoes3/shoes3'
-hkey_org: 'mvmanila.com'
-license: C:/Projects/exe-shoes/ytm/Ytm.license
+maintainer: 'ccoupe@cableone.net'
+license: /home/ccoupe/Projects/linux-shoes/ytm/Ytm.license
+license_tag: 'open source'
+category: Office
+linux_where: /usr/local  # this less likely to cause problems
+create_menu: true
 include_exts:
  - ftsearch
  - chipmunk
 include_gems:
  - sqlite3
- - nokogiri-1.6.7.1-x86-mingw32
- - ffi-1.9.10-x86-mingw32
+ - nokogiri-1.6.7.1
+ - ffi-1.9.10
  - rubyserial-0.2.4
+
 ```
+
 Remember - That is just a demo!  Give it a try to see how it works. 
  
 WARNING: because it's yaml and read by Ruby you must use Ruby Windows file path

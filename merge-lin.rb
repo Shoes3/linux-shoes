@@ -19,7 +19,7 @@ module PackShoes
     # setup defaults if not in the opts
     opts['publisher'] = 'shoerb' unless opts['publisher']
     opts['website'] = 'http://shoesrb.com/' unless opts['website']
-    opts['hkey_org'] = 'Hackety.org' unless opts['hkey_org']
+    #opts['hkey_org'] = 'Hackety.org' unless opts['hkey_org']
     opts['linux_where'] = '/usr/local' unless opts['linux_where']
     toplevel = []
     Dir.chdir(DIR) do
@@ -40,6 +40,7 @@ module PackShoes
     licf = File.open("#{packdir}/COPYING.txt", 'w')
     if opts['license'] && File.exist?(opts['license'])
       IO.foreach(opts['license']) {|ln| licf.puts ln}
+      rm_rf "{packdir}/#{File.basename(opts['license'])}"
     end
     IO.foreach("#{DIR}/COPYING.txt") {|ln| licf.puts ln}  
     licf.close
@@ -130,6 +131,7 @@ module PackShoes
     # hide shoes-bin and shoes launch script names
     puts "make_installer"
     after_install = "#{opts['app_name']}_install.sh"
+    before_remove = "#{opts['app_name']}_remove.sh"
     where = opts['linux_where']
     Dir.chdir(packdir) do
       mv 'shoes-bin', "#{opts['app_name']}-bin"
@@ -147,15 +149,47 @@ SCR
       chmod 0755, "#{opts['app_name']}"
       rm_rf 'shoes'
       rm_rf 'debug'
-      # still inside packdir. Make an fpm after-install script
-      File.open(after_install, 'w') do |f|
-       f << <<SCR
-#!/bin/bash
-cd #{where}/bin
-ln -s #{where}/lib/#{packdir}/#{opts['app_name']} .
-SCR
-       chmod 0755, f
+      rm_rf 'Shoes.desktop.tmpl'
+      rm_rf 'Shoes.remove.desktop'
+      rm_rf 'Shoes.remove.tmpl'
+      rm_rf 'shoes-install.sh'
+      rm_rf 'shoes-uninstall.sh'
+      rm_rf 'Shoes.desktop'
+      # still inside packdir. Make an fpm after-install script and some 
+      # xdg .desktops
+      if opts['create_menu'] == true
+        File.open("#{opts['app_name']}.desktop",'w') do |f|
+          f << "[Desktop Entry]\n"
+          f << "Name=#{opts['app_name']}\n"
+          f << "Exec=#{where}/bin/#{opts['app_name']}\n"
+          f << "StartupNotify=true\n"
+          f << "Terminal=false\n"
+          f << "Type=Application\n"
+          f << "Comment=#{opts['purpose']}\n"
+          f << "Icon=#{where}/lib/#{packdir}/#{opts['app_png']}\n"
+          f << "Categories=#{opts['category']};\n"
+        end
       end
+      File.open(after_install, 'w') do |f|
+        f << "#!/bin/bash\n"
+        f << "cd #{where}/bin\n"
+        f << "ln -s #{where}/lib/#{packdir}/#{opts['app_name']} .\n"
+        # do we have a menu?
+        if opts['create_menu'] == true
+          f << "cd #{where}/lib/#{packdir}\n"
+          f << "xdg-desktop-menu install --novendor  #{opts['app_name']}.desktop\n"
+        end
+      end
+      chmod 0755, after_install
+      File.open(before_remove, 'w') do |f|
+        f << "#!/bin/bash\n"
+        f << "rm #{where}/bin/#{opts['app_name']}\n"
+        f << "cd #{where}/lib/#{packdir}\n"
+        if opts['create_menu'] == true
+          f << "xdg-desktop-menu uninstall #{opts['app_name']}.desktop\n"
+        end
+      end
+      chmod 0755, before_remove
     end
     # now we do fpm things - lets build a bash script for debugging
     arch = `uname -m`.strip
@@ -164,11 +198,14 @@ SCR
 #!/bin/bash
 fpm --verbose -t deb -s dir -p #{packdir}.deb -f -n #{opts['app_name']} \\
 --prefix '#{opts['linux_where']}/lib' --after-install #{packdir}/#{after_install} \\
--a #{arch} --url "#{opts['website']}" --license 'None' \\
+-a #{arch} --url "#{opts['website']}" --license '#{opts['license_tag']}' --before-remove #{packdir}/#{before_remove} \\
 --vendor '#{opts['publisher']}' --category #{opts['category']} \\
 --description "#{opts['purpose']}" -m '#{opts['maintainer']}' #{packdir}
 SCR
     end
     chmod 0755, 'fpm.sh'
+    #puts "Please examine fpm.sh and then ./ftm.sh to build the deb"
+    `./fpm.sh`
   end
 end
+

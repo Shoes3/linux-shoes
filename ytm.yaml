@@ -3,18 +3,15 @@ app_version: 'Demo'
 app_loc: /home/ccoupe/Projects/linux-shoes/ytm/
 app_start: ytm.rb
 app_png: ytm.png
-app_ico: /home/ccoupe/Projects/exe-shoes/ytm/ytm.ico
-app_installer_ico: /home/ccoupe/Projects/exe-shoes/ytm/ytm.ico
-installer_sidebar_bmp: /home/ccoupe/Projects/icons/ytm/installer-1.bmp
-installer_header_bmp: /home/ccoupe/Projects/icons/ytm/installer-2.bmp
 purpose: 'Compute Yield to Maturity'
 publisher: 'Right Wing Conspiracy'
 website: 'https://github.com/Shoes3/shoes3'
 maintainer: 'ccoupe@cableone.net'
-hkey_org: 'mvmanila.com'
-license: /home/ccoupe/Projects/exe-shoes/ytm/Ytm.license
-category: Investing
+license: /home/ccoupe/Projects/linux-shoes/ytm/Ytm.license
+license_tag: 'open source'
+category: Office
 linux_where: /usr/local  # this less likely to cause problems
+create_menu: true
 include_exts:
  - ftsearch
  - chipmunk
