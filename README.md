@@ -152,13 +152,18 @@ Less obvious is that where lin-merge.rb creates fpm.sh and calls it, every thing
 can call the distribution packaging tools yourself with whatever generated config files you
 like. 
 
-#{packdir} is a complete application. Cd into it and ./the app_name:  As written, it's easier
+ #{packdir} is a complete application. Cd into it and ./app_name:  As written, it's easier
 to install #{packdir} in /usr/[local]/lib/Ytm-app. - The script appends -app because there is a ytm/
 in the directory. *Because it's example.* You would be better off having  app_loc: point to a directory
-that isn't next to the lin-merge.rb script.  You might have to fix a few lines of code incase the -app
+that isn't next to the lin-merge.rb script.  You might have to fix a few lines of code in case the '-app`
 is appended when it shouldn't be. I'm at the mercy of how github stores things for download and I wanted
 to include an example you can run.  It's only a script and now it's your script.
 
 
+### Could I rewrite lin-merge.rb, ytm-merge.rb in python or bash ?
 
+Of course you could! We're just moving files around and creating some text files
+so #{packdir} is something you can feed to whatever you want. Fpm needs a
+Ruby (not Shoes Ruby). If you don't need fpm, then you don't need Ruby and you could rewrite
+in any language you like. It's your code.
 
