@@ -55,13 +55,13 @@ module PackShoes
     exts = opts['include_exts'] # returns []
     if  !exts || ! exts.include?('ftsearch')
       puts "removing ftsearchrt.so"
-      rm "#{packdir}/lib/ruby/#{rbmm}.0/i386-mingw32/ftsearchrt.so" 
+      rm "#{packdir}/lib/ruby/#{rbmm}.0/#{RUBY_PLATFORM}/ftsearchrt.so" 
       rm_rf "#{packdir}/lib/shoes/help.rb"
       rm_rf "#{packdir}/lib/shoes/search.rb"
     end
     if  !exts || ! exts.include?('chipmunk')
       puts "removing chipmunk"
-      rm "#{packdir}/lib/ruby/#{rbmm}.0/i386-mingw32/chipmunk.so"
+      rm "#{packdir}/lib/ruby/#{rbmm}.0/#{RUBY_PLATFORM}/chipmunk.so"
       rm "#{packdir}/lib/shoes/chipmunk.rb"
     end
     # get rid of some things in lib

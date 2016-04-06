@@ -77,14 +77,14 @@ need to know what's in a deb or rpm or ... So know their rules.
 
 ## Usage 
 
-`$ tshoes.exe --ruby ytm-merge.rb`
+`$ tshoes --ruby ytm-merge.rb`
 
 As you know --ruby means to run Shoes as a mostly standard Ruby with some
 ENV['vars'] and Constants you'll find in Shoes. Like DIR and without showing the GUI.
 
 The **sample** just loads ytm.yaml and calls the Shoes module function
-PackShoes::merge_exe in merge-exe.rb which reads the ytm.yaml settings and goes
-to work building an exe. 
+PackShoes::merge_linux in merge-lin.rb passing the opts{hash} from the ytm.yaml settings and goes
+to work building a .deb (or .rpm .. or) 
 
 The .yaml for the example is 
 

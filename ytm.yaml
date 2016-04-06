@@ -13,8 +13,8 @@ category: Office
 linux_where: /usr/local  # this less likely to cause problems
 create_menu: true
 include_exts:
- - ftsearch
- - chipmunk
+# - ftsearch
+# - chipmunk
 include_gems:
  - sqlite3
  - nokogiri-1.6.7.1
