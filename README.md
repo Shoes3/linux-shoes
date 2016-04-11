@@ -97,7 +97,7 @@ app_png: ytm.png
 purpose: 'Compute Yield to Maturity'
 publisher: 'Right Wing Conspiracy'
 website: 'https://github.com/Shoes3/shoes3'
-maintainer: 'ccoupe@cableone.net'
+maintainer: '<ccoupe@cableone.net>'
 license: /home/ccoupe/Projects/linux-shoes/ytm/Ytm.license
 license_tag: 'open source'
 category: Office
@@ -167,3 +167,9 @@ so #{packdir} is something you can feed to whatever you want. Fpm needs a
 Ruby (not Shoes Ruby). If you don't need fpm, then you don't need Ruby and you could rewrite
 in any language you like. It's your code.
 
+###  fpm doesn't do what I want
+
+`lintian Ytm-app.deb` does complain about some things in the deb. It still installs
+correctly.  I consider the lack of a copyright file to be the biggest error.
+If it really offends you then you can script your deb build using the existing tools -
+its just temp dirs and text file and command line tools.
